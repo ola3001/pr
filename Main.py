@@ -4,7 +4,11 @@ import rospy
 import math
 from ardrone_autonomy.msg import Navdata
 from std_msgs.msg import Float32
-
+from sensor_msgs.msg import Image
+from cv_bridge import CvBridge, CvBridgeError
+import cv2
+import numpy as np
+from geometry_msgs.msg import Twist
 
 global ax
 global ay
@@ -39,14 +43,16 @@ def main():
 		Pteta.publish(teta)
 		delay.sleep()
 
-def __init__(self):
+class LineFollower(object):
+
+  def __init__(self):
     
         self.image_sub = rospy.Subscriber("/camera/rgb/image_raw",Image,self.camera_callback) 
         self.bridge_object = CvBridge()
         self.speed_pub = rospy.Publisher ("/cmd_vel", Twist, queue_size=1)     
 
 
-def camera_callback(self,data):
+  def camera_callback(self,data):
         try:
             cv_image = self.bridge_object.imgmsg_to_cv2(data, desired_encoding="bgr8")
         except CvBridgeError as e:
@@ -74,8 +80,10 @@ def camera_callback(self,data):
         
         self.speed_pub.publish(speed_cmd)
 
-      
-
+  def main():
+    rospy.init_node('line_following_node', anonymous=True)
+    line_follower_object = LineFollower()    
+  
 if __name__=='__main__':
 	try:
 		main()
